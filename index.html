@@ -338,6 +338,14 @@
   @media (prefers-reduced-motion:no-preference){
     .status-pill.on-air .dot{animation:pulse 1.8s ease-out infinite;}
   }
+  .nav-live{display:inline-flex;align-items:center;gap:7px;}
+  .nav-live.on-air .dot{
+    background:var(--red);
+    box-shadow:0 0 0 0 rgba(230,72,63,.6);
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .nav-live.on-air .dot{animation:pulse 1.8s ease-out infinite;}
+  }
   .ep-title{
     font-family:var(--serif);
     font-size:1.3rem;
@@ -569,7 +577,7 @@
       <span class="wordmark">Deu Papo<small>Podcast</small></span>
     </a>
     <nav class="top">
-      <a href="#agora">Ao vivo</a>
+      <a href="#agora" class="nav-live" id="nav-live"><span class="dot"></span>Ao vivo</a>
       <a href="#episodios">Episódios</a>
       <a href="#sobre">Sobre</a>
       <a href="#seguir">Seguir</a>
@@ -762,14 +770,17 @@ function setNowPlaying({live, videoId, title, desc, durationLabel, dateLabel}){
   const pill = document.getElementById('status-pill');
   const text = document.getElementById('status-text');
   const heroBadge = document.getElementById('hero-badge');
+  const navLive = document.getElementById('nav-live');
   if(live){
     pill.classList.add('on-air');
     text.textContent = 'Ao vivo agora';
     if(heroBadge) heroBadge.classList.add('on-air');
+    if(navLive) navLive.classList.add('on-air');
   } else {
     pill.classList.remove('on-air');
     text.textContent = 'Último episódio';
     if(heroBadge) heroBadge.classList.remove('on-air');
+    if(navLive) navLive.classList.remove('on-air');
   }
 }
 
