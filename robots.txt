@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://deu-papo-podcast.vercel.app/sitemap.xml
