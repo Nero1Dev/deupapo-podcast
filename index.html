@@ -146,7 +146,15 @@
     transition:color .15s ease;
   }
   nav.top a:hover, nav.top a:focus-visible{color:var(--ink);}
-  @media (max-width:560px){ nav.top{display:none;} }
+  @media (max-width:560px){
+    header.site .wrap{flex-wrap:wrap;row-gap:14px;}
+    nav.top{
+      width:100%;
+      justify-content:space-between;
+      gap:4px;
+      font-size:.78rem;
+    }
+  }
 
   /* ---------- hero ---------- */
   .hero{padding:64px 0 44px;}
@@ -356,6 +364,10 @@
     font-size:.78rem;
   }
   .ep-foot .spacer{flex:1;}
+  @media (max-width:520px){
+    .ep-foot{row-gap:12px;}
+    .ep-foot .spacer{flex-basis:100%;height:0;}
+  }
   .link-arrow{
     text-decoration:none;
     font-weight:700;
@@ -370,6 +382,7 @@
   .ep-row{
     display:grid;
     grid-template-columns:52px 1fr auto;
+    grid-template-areas:"num content dur";
     gap:18px;
     align-items:start;
     padding:22px 0;
@@ -378,6 +391,20 @@
     color:inherit;
   }
   .ep-row:first-child{border-top:1px solid var(--line);}
+  .ep-num{grid-area:num;}
+  .ep-content{grid-area:content;min-width:0;}
+  .ep-dur{grid-area:dur;}
+  @media (max-width:640px){
+    .ep-row{
+      grid-template-columns:auto 1fr;
+      grid-template-areas:
+        "num dur"
+        "content content";
+      row-gap:10px;
+      column-gap:12px;
+    }
+    .ep-dur{justify-self:end;}
+  }
   .ep-num{
     font-family:var(--mono);
     font-size:.95rem;
@@ -695,7 +722,7 @@ function buildEpisodeList(){
     row.rel = 'noopener';
     row.innerHTML = `
       <span class="ep-num">${ep.num}</span>
-      <span>
+      <span class="ep-content">
         <p class="ep-row-title">${ep.title}</p>
         <p class="ep-row-sub">${ep.desc}</p>
         <span class="ep-tags">${ep.tags.map(t => `<span class="tag">${t}</span>`).join('')}</span>
