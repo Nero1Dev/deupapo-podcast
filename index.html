@@ -532,6 +532,10 @@
   .tile.yt .tile-cta{color:var(--orange);}
 
   /* ---------- participe / envio de e-mail ---------- */
+  .participe-grid{display:grid;gap:32px;}
+  @media (min-width:900px){
+    .participe-grid{grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  }
   .participe-sub{
     color:var(--ink-dim);
     font-size:.98rem;
@@ -542,7 +546,6 @@
   .participe-form{
     display:grid;
     gap:12px;
-    max-width:560px;
     background:var(--surface);
     border:1px solid var(--line);
     border-radius:var(--radius);
@@ -581,6 +584,36 @@
   }
   .participe-status.ok{color:#5fbf8f;}
   .participe-status.err{color:var(--red);}
+  .participe-aside{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px;
+  }
+  .participe-aside .section-note{margin:0 0 16px;}
+  .idea-chips{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .idea-chips li{
+    font-family:var(--mono);
+    font-size:.78rem;
+    color:var(--ink-dim);
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:8px 14px;
+  }
+  .participe-aside-note{
+    color:var(--ink-faint);
+    font-size:.85rem;
+    line-height:1.5;
+    margin:20px 0 0;
+  }
 
   /* ---------- footer ---------- */
   footer{padding:40px 0 0;}
@@ -707,17 +740,33 @@
     <div class="section-head">
       <h2 class="section-title">Tem uma história pra contar?</h2>
     </div>
-    <p class="participe-sub">Manda seu nome, um jeito de te responder e conta rapidinho a ideia — pode ser um tema, uma pergunta ou você mesmo como convidado do próximo episódio.</p>
-    <form class="participe-form" id="participeForm">
-      <input type="hidden" name="access_key" value="COLE_AQUI_SUA_ACCESS_KEY">
-      <input type="hidden" name="subject" value="Nova sugestão — site Deu Papo">
-      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-      <input type="text" name="name" placeholder="Seu nome" required>
-      <input type="email" name="email" placeholder="Seu e-mail" required>
-      <textarea name="message" placeholder="Sua sugestão de tema, convidado ou pergunta..." required></textarea>
-      <button type="submit" class="btn btn-solid">ENVIAR SUGESTÃO →</button>
-      <span class="participe-status" id="participeStatus" role="status"></span>
-    </form>
+    <div class="participe-grid">
+      <div>
+        <p class="participe-sub">Manda seu nome, um jeito de te responder e conta rapidinho a ideia — pode ser um tema, uma pergunta ou você mesmo como convidado do próximo episódio.</p>
+        <form class="participe-form" id="participeForm">
+          <input type="hidden" name="access_key" value="COLE_AQUI_SUA_ACCESS_KEY">
+          <input type="hidden" name="subject" value="Nova sugestão — site Deu Papo">
+          <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+          <input type="text" name="name" placeholder="Seu nome" required>
+          <input type="email" name="email" placeholder="Seu e-mail" required>
+          <textarea name="message" placeholder="Sua sugestão de tema, convidado ou pergunta..." required></textarea>
+          <button type="submit" class="btn btn-solid">ENVIAR SUGESTÃO →</button>
+          <span class="participe-status" id="participeStatus" role="status"></span>
+        </form>
+      </div>
+      <aside class="participe-aside">
+        <p class="section-note">SEM IDEIA? MANDA UMA DESSAS</p>
+        <ul class="idea-chips">
+          <li>Ansiedade</li>
+          <li>Relacionamentos</li>
+          <li>Saúde mental</li>
+          <li>Autoconhecimento</li>
+          <li>Maternidade e paternidade</li>
+          <li>Empreendedorismo</li>
+        </ul>
+        <p class="participe-aside-note">Ou qualquer outro assunto que valha um bom papo — a gente lê tudo.</p>
+      </aside>
+    </div>
   </section>
 
   <section class="section wrap" id="seguir" style="padding-top:44px;">
