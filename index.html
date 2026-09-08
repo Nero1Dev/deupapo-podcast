@@ -103,9 +103,9 @@
     backdrop-filter:blur(10px);
     background:rgba(11,8,16,.86);
   }
-  #agora, #episodios, #sobre, #seguir{scroll-margin-top:100px;}
+  #agora, #episodios, #sobre, #participe, #seguir{scroll-margin-top:100px;}
   @media (max-width:560px){
-    #agora, #episodios, #sobre, #seguir{scroll-margin-top:150px;}
+    #agora, #episodios, #sobre, #participe, #seguir{scroll-margin-top:150px;}
   }
   header.site .wrap{
     display:flex;
@@ -531,6 +531,57 @@
   .tile.ig .tile-cta{color:#e0538c;}
   .tile.yt .tile-cta{color:var(--orange);}
 
+  /* ---------- participe / envio de e-mail ---------- */
+  .participe-sub{
+    color:var(--ink-dim);
+    font-size:.98rem;
+    line-height:1.6;
+    max-width:56ch;
+    margin:0 0 26px;
+  }
+  .participe-form{
+    display:grid;
+    gap:12px;
+    max-width:560px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px;
+  }
+  .participe-form input[type="text"],
+  .participe-form input[type="email"],
+  .participe-form textarea{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:.92rem;
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  .participe-form input::placeholder,
+  .participe-form textarea::placeholder{color:var(--ink-faint);}
+  .participe-form input:focus,
+  .participe-form textarea:focus{border-color:var(--orange);}
+  .participe-form textarea{min-height:110px;resize:vertical;font-family:inherit;}
+  .participe-form .btn{
+    justify-self:start;
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .participe-status{
+    font-family:var(--mono);
+    font-size:.78rem;
+    color:var(--ink-faint);
+    min-height:1em;
+  }
+  .participe-status.ok{color:#5fbf8f;}
+  .participe-status.err{color:var(--red);}
+
   /* ---------- footer ---------- */
   footer{padding:40px 0 0;}
   .footer-top{
@@ -646,6 +697,27 @@
   <section class="quote-block wrap" id="sobre">
     <blockquote>"Todo mundo carrega uma história que ainda não contou pra ninguém."</blockquote>
     <p class="about-body">O <strong>Deu Papo</strong> é um podcast de conversa aberta: cada episódio recebe uma pessoa diferente — psicanalistas, artistas, gente do bairro — pra falar sem roteiro sobre o que realmente importa pra ela. Gravado com dois microfones, uma sala pequena e a disposição de ouvir até o fim.</p>
+  </section>
+
+  <!-- SEÇÃO: PARTICIPE (formulário que manda e-mail via Web3Forms, mesma tecnologia gratuita
+       usada no site do Nairon — sem precisar de servidor próprio. Antes de publicar, crie uma
+       conta grátis em web3forms.com com o e-mail que vai receber as sugestões e cole a
+       access_key gerada no lugar de "COLE_AQUI_SUA_ACCESS_KEY" logo abaixo) -->
+  <section class="section wrap" id="participe" style="padding-top:44px;">
+    <div class="section-head">
+      <h2 class="section-title">Tem uma história pra contar?</h2>
+    </div>
+    <p class="participe-sub">Manda seu nome, um jeito de te responder e conta rapidinho a ideia — pode ser um tema, uma pergunta ou você mesmo como convidado do próximo episódio.</p>
+    <form class="participe-form" id="participeForm">
+      <input type="hidden" name="access_key" value="COLE_AQUI_SUA_ACCESS_KEY">
+      <input type="hidden" name="subject" value="Nova sugestão — site Deu Papo">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+      <input type="text" name="name" placeholder="Seu nome" required>
+      <input type="email" name="email" placeholder="Seu e-mail" required>
+      <textarea name="message" placeholder="Sua sugestão de tema, convidado ou pergunta..." required></textarea>
+      <button type="submit" class="btn btn-solid">ENVIAR SUGESTÃO →</button>
+      <span class="participe-status" id="participeStatus" role="status"></span>
+    </form>
   </section>
 
   <section class="section wrap" id="seguir" style="padding-top:44px;">
@@ -811,6 +883,41 @@ function applyLiveResult(data){
   setNowPlaying(data);
   document.getElementById('checked-note').textContent = data.live ? 'ao vivo · atualizado agora' : 'último episódio · atualizado agora';
 }
+
+// SEÇÃO PARTICIPE: envia via Web3Forms (web3forms.com), sem precisar de servidor —
+// a "access_key" do Web3Forms é feita pra ficar exposta no HTML, diferente de uma chave de
+// API secreta, que nunca deve ir pro código do lado do cliente.
+const participeForm = document.getElementById('participeForm');
+const participeStatus = document.getElementById('participeStatus');
+
+participeForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submitBtn = participeForm.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  participeStatus.textContent = 'ENVIANDO...';
+  participeStatus.className = 'participe-status';
+
+  try{
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(participeForm)
+    });
+    const data = await res.json();
+    if(data.success){
+      participeStatus.textContent = 'ENVIADO — OBRIGADO PELA IDEIA!';
+      participeStatus.className = 'participe-status ok';
+      participeForm.reset();
+    } else {
+      throw new Error(data.message || 'Falha no envio');
+    }
+  } catch(err){
+    participeStatus.textContent = 'NÃO FOI POSSÍVEL ENVIAR — TENTE PELO INSTAGRAM.';
+    participeStatus.className = 'participe-status err';
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
 
 buildWave();
 buildEpisodeList();
